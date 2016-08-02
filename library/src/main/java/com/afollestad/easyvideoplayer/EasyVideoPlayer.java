@@ -361,6 +361,8 @@ public class EasyVideoPlayer extends FrameLayout implements IUserMethods, Textur
             if (mCallback != null)
                 mCallback.onPreparing(this);
             mPlayer.setSurface(mSurface);
+            
+            
             if (mSource.getScheme() != null &&
                     (mSource.getScheme().equals("http") || mSource.getScheme().equals("https"))) {
                 LOG("Loading web URI: " + mSource.toString());
@@ -598,6 +600,17 @@ public class EasyVideoPlayer extends FrameLayout implements IUserMethods, Textur
         LOG("Surface texture destroyed");
         mSurfaceAvailable = false;
         mSurface = null;
+        
+         /*Edit: 
+         /*Author: Muhammad Shahab*/
+         /*Description:  When user needs to use camera somewhere outside the Application
+                        and Mobile doesn't support multiple camera instances so we have
+                        to release the media player*/
+        
+        if (mPlayer!=null)
+            mPlayer.release();
+        
+        /*Edit*/
         return false;
     }
 
@@ -857,8 +870,16 @@ public class EasyVideoPlayer extends FrameLayout implements IUserMethods, Textur
     // Utilities
 
     private static void LOG(String message, Object... args) {
+        
+        
         try {
-            if (args != null)
+            
+         /*Edit:
+            * Author: Muhammad Shahab
+            * Description: Check of length to avoid Missing arguments
+            * Exception when args length is zero
+            */
+        if (args != null && args.length!=0)
                 message = String.format(message, args);
             Log.d("EasyVideoPlayer", message);
         } catch (Exception ignored) {
